@@ -1,0 +1,57 @@
+# note: this file is for local development, currently the file is not used to build
+# the plugin
+[project]
+name = "filename-installer"
+version = "0.1.0"
+description = "Mod Organizer plugin (IPluginInstaller) to set the mod name (GuessedString) to the filename. Actual installation has to be handled by other installers."
+authors = [{ name = "Zash", email = "zash@fantasymail.de" }]
+license = "MIT"
+readme = "README.md"
+requires-python = ">=3.13,<4.0"
+dynamic = ["dependencies"]
+
+[tool.poetry]
+package-mode = false
+
+[tool.poetry.dependencies]
+pyqt6 = "6.11.0"
+
+[tool.poetry.group.dev.dependencies]
+mobase-stubs = "^2.5.2"
+pyright = "^1.1.409"
+ruff = "^0.15.14"
+types-psutil = "^7.2.2.20260518"
+poethepoet = "^0.46.0"
+
+[build-system]
+requires = ["poetry-core (>=2.0)"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poe.tasks]
+format-imports = "ruff check --select I . --fix"
+format-ruff = "ruff format ."
+format.sequence = ["format-imports", "format-ruff"]
+lint-ruff = "ruff check ."
+lint-ruff-format = "ruff format --check ."
+lint-pyright = "pyright ."
+lint.sequence = ["lint-ruff", "lint-ruff-format", "lint-pyright"]
+lint.ignore_fail = "return_non_zero"
+
+[tool.ruff]
+extend-exclude = ["typings"]
+
+[tool.ruff.lint]
+extend-select = ["B", "Q", "I"]
+
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = ["PyQt6.QtCore.QModelIndex"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["mobase"]
+
+[tool.pyright]
+exclude = ["lib", "**/.*", "venv", "typings"]
+typeCheckingMode = "strict"
+reportMissingTypeStubs = true
+reportMissingModuleSource = false
+pythonPlatform = "Windows"
